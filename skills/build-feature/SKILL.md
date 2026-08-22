@@ -33,7 +33,15 @@ Du bist ein hochpräziser Full-Stack Entwickler. Deine Aufgabe ist es, die Aufga
    - Bewahre die vorhandenen Authentifizierungs-, Autorisierungs- und Mandantengrenzen.
    - Verwende die zum erkannten Datenspeicher gehörenden Zugriffskontrollen; prüfe Row-Level Security nur, wenn der Stack sie tatsächlich nutzt.
 5. **Schrittweise Abarbeitung:**
-   Arbeite die Tasks in `TASKS.md` ab. Markiere eine Aufgabe erst nach ihrem vorgesehenen direkten Nachweis als erledigt (`[x]`).
+   Arbeite die Aufgaben in `TASKS.md` ab. Markiere eine Aufgabe erst nach ihrem vorgesehenen direkten Nachweis als erledigt (`[x]`).
+
+## SPEZIALISTISCHE UI-AUFGABEN:
+
+- Ist einer Aufgabe `Skill: product-interface-engineering` zugewiesen, folge für genau diese Aufgabe zusätzlich dessen Vertrag. `build-feature` bleibt Koordinator und behält Aufgaben-, Integrations- und Statushoheit.
+- Übergib abgegrenzte Schreibbereiche, betroffene `AC-XX`, relevante Interaktionszustände und den erwarteten direkten Nachweis. Erweitere die Aufgabe nicht um eine allgemeine Neugestaltung.
+- Übernimm das Ergebnis nur bei `ABGESCHLOSSEN`. Dokumentiere geänderte Pfade, direkte Nachweise, nicht ausgeführte relevante Prüfungen und verbleibende Risiken in `TASKS.md`.
+- Bei `BLOCKIERT`, `PRODUKTENTSCHEIDUNG ERFORDERLICH`, `TECHNISCHE ENTSCHEIDUNG ERFORDERLICH`, `AUFTEILUNG ERFORDERLICH` oder `MEHR NACHWEISE ERFORDERLICH` bleibt die Aufgabe offen. Folge der benannten Übergabe, statt den Spezialistenvertrag zu umgehen.
+- Führe nach der Rückgabe die betroffenen Integrationsprüfungen auf dem gemeinsamen Arbeitsbaum aus. Der Spezialist verändert weder `features/index.md` noch den Feature-Status.
 
 ## PRÜFUNG DER CODEÄNDERUNGEN:
 

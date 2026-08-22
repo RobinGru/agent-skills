@@ -1,6 +1,6 @@
 # Agent Skills
 
-Dieses Repository enthält zehn eigene, deutschsprachige Zed Agent Skills für einen dokumentierten Feature-Arbeitsablauf von der Projektinitialisierung bis zur Bereitstellung.
+Dieses Repository enthält elf eigene, deutschsprachige Zed Agent Skills für einen dokumentierten Feature-Arbeitsablauf von der Projektinitialisierung bis zur Bereitstellung.
 
 Die Skills sind technologieneutral: Sie untersuchen zuerst Repository-Anweisungen, Manifeste, Sperrdateien, CI/CD und vorhandene Konventionen. Sie setzen weder TypeScript noch Supabase, npm oder einen bestimmten Hosting-Anbieter voraus.
 
@@ -14,6 +14,7 @@ Die Skills sind technologieneutral: Sie untersuchen zuerst Repository-Anweisunge
 | [`system-design`](skills/system-design/SKILL.md) | Entwirft ein stackgerechtes Systemdesign mit Komponenten, Datenflüssen, Zugriffskontrollen und Verifikationsplan. |
 | [`task-planner`](skills/task-planner/SKILL.md) | Zerlegt Spezifikation und Systemdesign in nachvollziehbare Implementierungsaufgaben. |
 | [`build-feature`](skills/build-feature/SKILL.md) | Implementiert die geplanten Aufgaben mit den im Repository erkannten Werkzeugen und Prüfungen. |
+| [`product-interface-engineering`](skills/product-interface-engineering/SKILL.md) | Implementiert genau eine begrenzte sichtbare UI-Aufgabe mit Interaktionszuständen, Barrierefreiheit und responsiver Bedienung und vermeidet unbegründetes generisches KI-Trenddesign. |
 | [`fact-based-code-review`](skills/fact-based-code-review/SKILL.md) | Prüft eine konkrete Änderung auf belegte Defekte und Integrationsrisiken, ohne Code oder Feature-Status zu verändern. |
 | [`failure-investigation`](skills/failure-investigation/SKILL.md) | Reproduziert und reduziert Fehler mit unbekannter Ursache, prüft konkurrierende Hypothesen und übergibt nur eine belegte sichere Änderungsgrenze an die Umsetzung. |
 | [`qa-agent`](skills/qa-agent/SKILL.md) | Prüft Akzeptanzkriterien und Sicherheitsanforderungen revisionsgebunden, ohne Quellcode zu reparieren. |
@@ -164,15 +165,24 @@ Ein Statuswechsel muss Ausgangsstatus, Zielstatus, verantwortlichen Skill, Grund
 2. `write-spec` definiert das beobachtbare Verhalten eines Features.
 3. `solution-framing` klärt bei Bedarf jeweils eine folgenreiche technische Entscheidung und verlangt eine ausdrückliche menschliche Auswahl.
 4. `system-design` entwirft die technische Umsetzung im erkannten Technologie-Stack und bindet genehmigte Entscheidungen ein.
-5. `task-planner` erstellt die ausführbaren Aufgaben.
+5. `task-planner` erstellt die ausführbaren Aufgaben und weist sichtbare UI-Aufgaben bei Bedarf `product-interface-engineering` zu.
 6. `build-feature` implementiert und verifiziert die Aufgaben; das Feature bleibt zunächst `IN_BUILD`.
-7. `fact-based-code-review` prüft die konkrete Änderung. Nur `READY FOR QA` für den unveränderten Stand erlaubt `build-feature`, `IN_BUILD` → `IN_REVIEW` zu setzen.
-8. `qa-agent` prüft Akzeptanzkriterien, Security und Revision. Bei einem Fehler mit unbekannter Ursache übergibt es zunächst an `failure-investigation`.
-9. `failure-investigation` reproduziert und reduziert den Fehler, ohne Code oder Feature-Status zu verändern; nur `SUPPORTED CAUSE` geht als begrenzter Fix zurück an `build-feature`.
-10. Nach der Korrektur und einer erneuten Codeprüfung prüft `qa-agent` die neue Revision erneut.
-11. `deploy-feature` plant zunächst einen Probelauf (`DRY RUN`) und führt nur ausdrücklich autorisierte Schritte aus.
+7. `product-interface-engineering` bearbeitet innerhalb von `IN_BUILD` genau eine zugewiesene UI-Aufgabe und gibt nur `ABGESCHLOSSEN` mit direktem Nachweis an `build-feature` zurück.
+8. `fact-based-code-review` prüft die konkrete Änderung. Nur `READY FOR QA` für den unveränderten Stand erlaubt `build-feature`, `IN_BUILD` → `IN_REVIEW` zu setzen.
+9. `qa-agent` prüft Akzeptanzkriterien, Sicherheit und Revision. Bei einem Fehler mit unbekannter Ursache übergibt es zunächst an `failure-investigation`.
+10. `failure-investigation` reproduziert und reduziert den Fehler, ohne Code oder Feature-Status zu verändern; nur `SUPPORTED CAUSE` geht als begrenzte Korrektur zurück an `build-feature`.
+11. Nach der Korrektur und einer erneuten Codeprüfung prüft `qa-agent` die neue Revision erneut.
+12. `deploy-feature` plant zunächst einen Probelauf (`DRY RUN`) und führt nur ausdrücklich autorisierte Schritte aus.
 
-Die Skills sind bewusst getrennt. Eine spätere Phase darf fehlende Freigaben oder Nachweise einer früheren Phase nicht selbst erfinden. Der reguläre Prüfpfad lautet:
+Die Skills sind bewusst getrennt. Eine spätere Phase darf fehlende Freigaben oder Nachweise einer früheren Phase nicht selbst erfinden. Der optionale UI-Spezialistenpfad lautet:
+
+```text
+task-planner → build-feature → product-interface-engineering → build-feature
+```
+
+`product-interface-engineering` verändert keinen Feature-Status und ersetzt weder Codeprüfung noch Qualitätssicherung.
+
+Der reguläre Prüfpfad lautet:
 
 ```text
 build-feature → fact-based-code-review → qa-agent

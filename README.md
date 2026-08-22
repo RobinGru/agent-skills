@@ -43,7 +43,88 @@ cp -R skills/qa-agent ~/.agents/skills/qa-agent
 
 Vorhandene Zielverzeichnisse nicht ungeprüft überschreiben. Starte anschließend eine neue Zed-Konversation und kontrolliere, ob die installierten Skills im Skill-Katalog erscheinen.
 
-`deploy-feature` hat `disable-model-invocation: true` und wird aus Sicherheitsgründen nur manuell aktiviert.
+## Installation in Codex
+
+Codex verwendet dieselbe Skill-Verzeichnisstruktur. Kopiere jedes gewünschte vollständige Skill-Verzeichnis einschließlich seiner `SKILL.md` an einen dieser Orte:
+
+- global für den aktuellen Benutzer: `~/.agents/skills/<skill-name>/SKILL.md`
+- nur für ein Repository: `<projekt>/.agents/skills/<skill-name>/SKILL.md`
+
+### Globale Installation unter macOS, Linux oder WSL
+
+```sh
+mkdir -p ~/.agents/skills
+cp -R skills/write-spec ~/.agents/skills/write-spec
+cp -R skills/system-design ~/.agents/skills/system-design
+cp -R skills/build-feature ~/.agents/skills/build-feature
+```
+
+### Globale Installation unter Windows PowerShell
+
+Unter Windows entspricht das globale Ziel normalerweise:
+
+```text
+C:\Users\<benutzername>\.agents\skills\
+```
+
+Gib bei `$SkillSource` den absoluten Pfad zum `skills`-Verzeichnis dieses Repositorys an:
+
+```powershell
+$SkillSource = "C:\Pfad\zu\agent-skills\skills"
+$GlobalSkillDir = Join-Path $env:USERPROFILE ".agents\skills"
+
+New-Item -ItemType Directory -Force $GlobalSkillDir
+Copy-Item -Recurse (Join-Path $SkillSource "write-spec") (Join-Path $GlobalSkillDir "write-spec")
+Copy-Item -Recurse (Join-Path $SkillSource "system-design") (Join-Path $GlobalSkillDir "system-design")
+Copy-Item -Recurse (Join-Path $SkillSource "build-feature") (Join-Path $GlobalSkillDir "build-feature")
+```
+
+Danach liegt beispielsweise `write-spec` hier:
+
+```text
+C:\Users\<benutzername>\.agents\skills\write-spec\SKILL.md
+```
+
+### Projektbezogene Installation
+
+Lege im Zielprojekt `.agents/skills/` an und kopiere die gewünschten Verzeichnisse dorthin:
+
+```text
+<projekt>/
+└── .agents/
+    └── skills/
+        ├── write-spec/
+        │   └── SKILL.md
+        ├── system-design/
+        │   └── SKILL.md
+        └── build-feature/
+            └── SKILL.md
+```
+
+Unter Windows PowerShell kannst du die Skills so in ein bestimmtes Projekt kopieren:
+
+```powershell
+$SkillSource = "C:\Pfad\zu\agent-skills\skills"
+$ProjectDir = "C:\Pfad\zu\deinem-projekt"
+$ProjectSkillDir = Join-Path $ProjectDir ".agents\skills"
+
+New-Item -ItemType Directory -Force $ProjectSkillDir
+Copy-Item -Recurse (Join-Path $SkillSource "write-spec") (Join-Path $ProjectSkillDir "write-spec")
+Copy-Item -Recurse (Join-Path $SkillSource "system-design") (Join-Path $ProjectSkillDir "system-design")
+Copy-Item -Recurse (Join-Path $SkillSource "build-feature") (Join-Path $ProjectSkillDir "build-feature")
+```
+
+Das projektbezogene Ergebnis liegt dann beispielsweise hier:
+
+```text
+C:\Pfad\zu\deinem-projekt\.agents\skills\write-spec\SKILL.md
+```
+
+Starte Codex anschließend in einer neuen Sitzung. Prüfe, ob die kopierten Skills im verfügbaren Skill-Katalog erscheinen. Wird ein Skill nicht erkannt, kontrolliere zuerst, ob Verzeichnisname, `name` im YAML-Frontmatter und Dateiname `SKILL.md` exakt übereinstimmen.
+
+Kopiere nur benötigte Skills und überschreibe vorhandene Zielverzeichnisse nicht ungeprüft. Für ein Update sollte das bestehende Zielverzeichnis zuerst gesichert oder bewusst ersetzt werden.
+
+`deploy-feature` hat `disable-model-invocation: true` und wird aus Sicherheitsgründen in unterstützenden Clients nur manuell aktiviert.
 
 Die ebenfalls deutschsprachige [`AGENTS.md`](AGENTS.md) enthält die übergeordneten Arbeits-, Kommunikations- und Verifikationsregeln dieses Repositorys. Sie verlangt deutsche Antworten und legt derzeit Englisch für Code, Kommentare und andere Repository-Artefakte fest. Zielprojekte können durch eigene, enger geltende Anweisungen abweichende Artefaktsprachen definieren.
 

@@ -1,271 +1,123 @@
-**English** · [Deutsch](README.de.md)
+# Agent Skills
 
-# AgentSkillForge
+Dieses Repository enthält zehn eigene, deutschsprachige Zed Agent Skills für einen dokumentierten Feature-Arbeitsablauf von der Projektinitialisierung bis zur Bereitstellung.
 
-![AgentSkillForge banner](assets/github-banner.jpg)
+Die Skills sind technologieneutral: Sie untersuchen zuerst Repository-Anweisungen, Manifeste, Sperrdateien, CI/CD und vorhandene Konventionen. Sie setzen weder TypeScript noch Supabase, npm oder einen bestimmten Hosting-Anbieter voraus.
 
-[![Validate](https://github.com/RobinGru/AgentSkillForge/actions/workflows/validate.yml/badge.svg?branch=main)](https://github.com/RobinGru/AgentSkillForge/actions/workflows/validate.yml)
-[![Runtime evals](https://github.com/RobinGru/AgentSkillForge/actions/workflows/runtime-evals.yml/badge.svg?branch=main)](https://github.com/RobinGru/AgentSkillForge/actions/workflows/runtime-evals.yml)
-[![CodeQL](https://github.com/RobinGru/AgentSkillForge/actions/workflows/codeql.yml/badge.svg?branch=main)](https://github.com/RobinGru/AgentSkillForge/actions/workflows/codeql.yml)
-[![License: Apache-2.0](https://img.shields.io/badge/License-Apache--2.0-blue.svg)](LICENSE)
-[![Python 3.11+](https://img.shields.io/badge/Python-3.11%2B-blue.svg)](pyproject.toml)
+## Eigene Skills
 
-Reusable Agent Skills that help AI coding assistants make careful changes and explain their work clearly.
-
-[Explore skills](#skill-catalog) · [Deliver tracked features](#tracked-feature-delivery) · [Install with Zed or Codex](#quick-start) · [Use the all-in-one template](#all-in-one-project-guidance) · [Contribute](CONTRIBUTING.md)
-
-> [!NOTE]
-> Static repository checks run for every pull request. Deterministic runtime-contract checks exercise the eval runner, while authenticated Codex smoke tests and Zed interactive checks are opt-in release evidence. See the [compatibility and maintenance policy](docs/compatibility.md) for the supported-client matrix and its explicit limits.
-
-## What is AgentSkillForge?
-
-AgentSkillForge is a collection of small, reusable Agent Skills for AI coding assistants. Each skill describes a task type, the facts to gather, the decisions to make, and how to report the result.
-
-Agent Skills are plain Markdown directories centred on `SKILL.md`, so they are not tied to a single client. This repository provides documented installers for Zed and Codex; other clients need their own documented way to load compatible skill directories.
-
-## Why use it?
-
-- **Focused guidance:** Choose a skill for the task instead of using one generic workflow.
-- **Facts before assumptions:** Skills distinguish observed facts, inferences, and checks that were not run.
-- **Portable Agent Skills:** Copy a complete skill directory to a compatible client without a required Python runtime.
-- **Checked distribution:** Repository automation validates structure, links, tests, static eval cases, and package contents.
-
-### Compact skill design
-
-Each `SKILL.md` keeps only its activation boundary, essential invariants, executable workflow, and output contract. Detailed guidance stays in on-demand `references/` or `assets/`. Repository tests cap every distributed skill at 120 lines and require an explicit routing signal in its description.
-
-## All-in-one project guidance
-
-Don't want to choose among many skills or deal with a complex installation? Use [`templates/AGENTS-AIO.md`](templates/AGENTS-AIO.md), the compact all-in-one option.
-
-Copy it into your project root as `AGENTS.md`. It provides general guidance for product fit, accessibility, security, verification, and review priorities without requiring a particular agent client.
-
-```sh
-cp templates/AGENTS-AIO.md /path/to/your-project/AGENTS.md
-```
-
-Add project-specific rules to the copied template, not to the distributed skills.
-
-## Skill Catalog
-
-Start with the sentence that best describes your task. The second column tells you when to pick a skill. The last column tells you when another skill is a better fit. You do not need to understand every technical term to make a good first choice.
-
-> **Source layout vs. installation:** The categories only organize this repository. After installation, every skill is directly in `<target>/<skill-name>/`.
-
-### Core workflow
-
-Use these skills for everyday repository work: getting to know a project, making a small change, saving useful knowledge, or continuing interrupted work.
-
-| Skill | Use it when | Use a different skill when |
-|---|---|---|
-| [`repository-onboarding`](skills/core/repository-onboarding/) | You need to understand an unfamiliar project before making bigger changes. | You first need to find out what the product should do (`project-discovery`), or you are investigating a broken feature (`failure-investigation`). |
-| [`repository-knowledge-curation`](skills/core/repository-knowledge-curation/) | You have confirmed a useful fact about the repository and want to save it in the right place. | The information is only a guess, temporary, or still needs a decision. |
-| [`safe-code-change`](skills/core/safe-code-change/) | You know what should change and where to change it safely. | You do not yet know why something is broken (`failure-investigation`), or old and new versions must work together during a rollout (`compatibility-migration`). |
-| [`session-handoff`](skills/core/session-handoff/) | You need to leave clear notes so someone can safely continue unfinished work. | You need to track a larger feature over several sessions (`feature-lifecycle`). |
-
-### Planning and coordination
-
-Use these skills before coding when you need to decide what to build, how it should work, or how to deliver a larger change safely.
-
-| Skill | Use it when | Use a different skill when |
-|---|---|---|
-| [`project-discovery`](skills/planning/project-discovery/) | The product is new or unclear: you do not yet know the users, goals, or first useful version. | You already know the product goal and need to describe one feature in detail (`feature-specification`). |
-| [`feature-specification`](skills/planning/feature-specification/) | A planned feature needs clear rules: what users can do, what happens in each situation, and how to tell it works. | You still need to decide what the product should achieve (`project-discovery`) or how to build it (`solution-framing`). |
-| [`solution-framing`](skills/planning/solution-framing/) | You know the goal but must choose an important technical approach. | The approach is already chosen and old and new versions must work side by side (`compatibility-migration`). |
-| [`compatibility-migration`](skills/planning/compatibility-migration/) | You are changing an API, data format, or system and old and new versions must work together for a while. | You still need to choose the overall approach (`solution-framing`) or only need to make one safe local change (`safe-code-change`). |
-| [`feature-lifecycle`](skills/planning/feature-lifecycle/) | A larger feature needs one short, revision-bound status record across several sessions. | You need to select and execute its technical tasks (`feature-delivery`). |
-| [`feature-delivery`](skills/planning/feature-delivery/) | You need to deliver a tracked feature through several bounded tasks, strictly sequentially in one agent. | You only need one bounded code change (`safe-code-change`) or a status-only update (`feature-lifecycle`). |
-
-### Quality, investigation, and review
-
-Use these skills to understand a problem, measure performance, check security risks, or review a finished change. They help you gather facts before deciding what to do next.
-
-| Skill | Use it when | Use a different skill when |
-|---|---|---|
-| [`failure-investigation`](skills/quality/failure-investigation/) | Something is broken and you do not know why. | The problem is speed, memory use, or resource use (`performance-investigation`). Once you know the fix, use `safe-code-change`. |
-| [`performance-investigation`](skills/quality/performance-investigation/) | The application is too slow or uses too much memory or other resources, and you can measure it. | You are investigating another kind of failure (`failure-investigation`). If you only hear “make it faster,” measure first. |
-| [`security-boundary-analysis`](skills/quality/security-boundary-analysis/) | You need to check who can access what, how an attacker could misuse it, and which protections are needed. | You only need a normal review of code changes (`fact-based-code-review`). |
-| [`fact-based-code-review`](skills/quality/fact-based-code-review/) | You want a practical review of a concrete set of code changes before merging. | You explicitly need an especially tough review of a high-risk change (`adversarial-deep-review`). |
-| [`adversarial-deep-review`](skills/quality/adversarial-deep-review/) | You explicitly need to challenge a risky change: failures, misuse, recovery, concurrency, and operations. | You need the normal merge review (`fact-based-code-review`); use this skill to add risk findings to that review. |
-
-### Specialized engineering
-
-Use these skills when the task is specifically about a user interface or a Vue/Nuxt component.
-
-| Skill | Use it when | Use a different skill when |
-|---|---|---|
-| [`product-interface-engineering`](skills/specialized/product-interface-engineering/) | You change something users see or use: a page, form, navigation, error message, accessibility behavior, or mobile layout. | The work is only on the backend, or you are reorganizing code without changing what users experience. |
-| [`vue-sfc-decomposition`](skills/specialized/vue-sfc-decomposition/) | A Vue or Nuxt component has become hard to maintain and can be split into clear smaller responsibilities. | You are changing what users see or how the interface behaves (`product-interface-engineering`). |
-
-Read a skill’s `SKILL.md` before using it. Keep the whole skill directory, including `references/` and `assets/`, because the skill may link to them.
-
-## Tracked feature delivery
-
-One feature owns its behavior, lifecycle status, and technical subtasks in separate canonical artifacts:
-
-```text
-docs/features/
-├── index.md
-└── <feature-id>/
-    ├── specification.md
-    ├── implementation.md
-    └── tasks.md
-```
-
-- `feature-specification` owns `specification.md` and creates or updates the compact row in `index.md`.
-- `feature-lifecycle` owns the revision-bound feature status in `implementation.md`.
-- `feature-delivery` owns the feature's bounded subtasks in `tasks.md` and applies the named specialist contract for each task.
-- `safe-code-change` or another specialist owns one concrete task and its direct proof.
-- `index.md` is only a summary. Full task definitions and evidence stay inside the feature directory.
-
-Delivery is strictly sequential in the same agent. Never use parallel agents or mark more than one task `IN PROGRESS`. After a task reaches `DONE`, `BLOCKED`, or `ABANDONED`, `feature-delivery` reconciles the records and selects the next executable `READY` task when complete delivery was requested.
-
-## Quick Start
-
-Install Git and Python 3.11 or newer before using an installer. The Zed and Codex wrappers both install all skills into the shared `~/.agents/skills` directory.
-
-<details>
-<summary>macOS, Linux, or WSL</summary>
-
-```sh
-git clone https://github.com/RobinGru/AgentSkillForge.git AgentSkillForge
-cd AgentSkillForge
-python3 scripts/install_zed_skills.py  # or: scripts/install_codex_skills.py
-```
-
-</details>
-
-<details>
-<summary>Windows PowerShell</summary>
-
-```powershell
-git clone https://github.com/RobinGru/AgentSkillForge.git AgentSkillForge
-cd AgentSkillForge
-py scripts\install_zed_skills.py  # or: scripts\install_codex_skills.py
-```
-
-</details>
-
-Start a new agent session after installation. The installer stops rather than replacing an existing skill directory.
-
-## Installation
-
-### Portable core
-
-Copy or reference the desired categorized source directory using your client’s documented mechanism. AgentSkillForge does not claim a universal install path or automatic-discovery convention.
-
-### Flat ZIP bundle
-
-Build a manually installable bundle from a source checkout:
-
-```sh
-python3 scripts/build_skill_bundle.py
-```
-
-It creates `dist/agent-skill-forge-skills.zip`. Extract its contents directly into your client skill directory, such as `~/.agents/skills`; each top-level directory is one complete skill. Do not copy the categorized `core/`, `planning/`, `quality/`, or `specialized/` source directories into that target.
-
-### Zed and Codex
-
-Use the client wrapper to install only one skill when you do not need the full catalog:
-
-```sh
-python3 scripts/install_zed_skills.py --skill performance-investigation
-python3 scripts/install_codex_skills.py --skill performance-investigation
-```
-
-Both wrappers delegate to the same installer and default to `~/.agents/skills`. Repeat `--skill` to install several skills. Use `--target` to install into another client or repository skill directory.
-
-> [!CAUTION]
-> `--force` deletes and recreates every selected target directory. Review local edits first; the installer does not merge files.
-
-See the complete [Zed](docs/clients/zed.md) and [Codex](docs/clients/codex.md) installation guides for selected skills, custom targets, updates, verification, and uninstallation.
-
-## Using skills together
-
-Common sequences are:
-
-- Unfamiliar repository: `repository-onboarding` establishes a technical working map before substantial work; hand verified reusable facts to `repository-knowledge-curation` when they need a canonical durable home.
-- New product: `project-discovery` establishes the product boundary and capability map, then `feature-specification` defines one capability before technical planning or implementation.
-- Multi-session feature delivery: follow the [tracked feature delivery](#tracked-feature-delivery) model; use `solution-framing` for consequential technical choices and `session-handoff` only for interrupted concrete work.
-
-- Unknown non-performance failure: `failure-investigation` establishes a supported cause and safe change boundary, then `safe-code-change` implements the fix, and `fact-based-code-review` reviews it.
-- Measured latency, throughput, memory, or resource problem: use `performance-investigation`, not `failure-investigation`; hand an understood change to `safe-code-change`, then use `fact-based-code-review`.
-- Multi-step migration: `solution-framing` chooses the direction only when it is still open, `compatibility-migration` defines authoritative coexistence and retirement states, `feature-lifecycle` may link their feature-level evidence, and `safe-code-change` implements each local step.
-- Explicit threat model: `security-boundary-analysis` defines trust transitions, abuse paths, and control obligations. Follow with `solution-framing` for architecture choices, `product-interface-engineering` for visible permission or recovery interactions, or `compatibility-migration` for staged coexistence; keep each output separate.
-- High-risk change: use `adversarial-deep-review` only for an explicit deep assessment of a concrete change, then hand its evidence to `fact-based-code-review` for the sole merge decision. A tracked feature may link the resulting evidence in `feature-lifecycle` without transferring either review responsibility.
-
-Your AI client decides when to load an installed skill. Descriptions are routing guidance, not guaranteed host behavior. Static and runtime-contract checks provide bounded evidence only; do not infer universal portability or reliable automatic activation from installation alone. See the [compatibility matrix](docs/compatibility.md).
-
-## Optional repository instructions
-
-[`templates/AGENTS.md`](templates/AGENTS.md) is an opinionated routing template for this catalog. It asks agents to respond in German and includes durable repository-memory guidance plus a compact write-then-verify rule. Adapt or remove those requirements before copying it into a project where they do not fit.
-
-
-## Compatibility
-
-| Area | Supported or required |
+| Skill | Zweck |
 |---|---|
-| Agent Skill format | Markdown `SKILL.md` directories with relative local references |
-| Agent clients | Supported: Codex CLI and Zed, subject to the documented evidence level; other compatible clients are unverified |
-| Documented integration | Zed with agent skills enabled; Codex CLI and Codex IDE extension; see [compatibility policy](docs/compatibility.md) |
-| Python | 3.11 or newer for the Zed/Codex installers, packaging, and repository checks |
-| Package runtime | No importable Python module; the wheel distributes Agent Skills and support files as data |
+| [`init-project`](skills/init-project/SKILL.md) | Klärt Produkt und technischen Kontext und erstellt die initialen Planungsartefakte. |
+| [`write-spec`](skills/write-spec/SKILL.md) | Erstellt eine testbare Feature-Spezifikation mit Akzeptanzkriterien im `Given / When / Then`-Format. |
+| [`solution-framing`](skills/solution-framing/SKILL.md) | Vergleicht genau eine folgenreiche technische Entscheidung und übergibt nur eine ausdrücklich menschlich genehmigte Auswahl an das Systemdesign. |
+| [`system-design`](skills/system-design/SKILL.md) | Entwirft ein stackgerechtes Systemdesign mit Komponenten, Datenflüssen, Zugriffskontrollen und Verifikationsplan. |
+| [`task-planner`](skills/task-planner/SKILL.md) | Zerlegt Spezifikation und Systemdesign in nachvollziehbare Implementierungsaufgaben. |
+| [`build-feature`](skills/build-feature/SKILL.md) | Implementiert die geplanten Aufgaben mit den im Repository erkannten Werkzeugen und Prüfungen. |
+| [`fact-based-code-review`](skills/fact-based-code-review/SKILL.md) | Prüft eine konkrete Änderung auf belegte Defekte und Integrationsrisiken, ohne Code oder Feature-Status zu verändern. |
+| [`failure-investigation`](skills/failure-investigation/SKILL.md) | Reproduziert und reduziert Fehler mit unbekannter Ursache, prüft konkurrierende Hypothesen und übergibt nur eine belegte sichere Änderungsgrenze an die Umsetzung. |
+| [`qa-agent`](skills/qa-agent/SKILL.md) | Prüft Akzeptanzkriterien und Sicherheitsanforderungen revisionsgebunden, ohne Quellcode zu reparieren. |
+| [`deploy-feature`](skills/deploy-feature/SKILL.md) | Plant und führt eine ausdrücklich autorisierte Bereitstellung mit Probelauf-, Migrations-, Wiederherstellungs- und Kurzprüfung durch. |
 
-The skill documents themselves do not require Python. Python is used by the installer and repository tooling.
+Die Beschreibungen, Überschriften und Anweisungstexte aller eigenen Skills sind deutsch. Skill-Namen, Dateipfade und fest definierte Statuswerte bleiben als stabile technische Identifikatoren unverändert.
 
-## Quality and development
-
-The **Validate** workflow runs the repository checks below. **CodeQL** analyzes the Python tooling for supported security issues.
-
-```sh
-python -m pip install -e ".[dev]"
-python scripts/validate_repository.py
-python scripts/check_links.py
-pytest
-python scripts/run_evals.py
-python scripts/run_runtime_evals.py --client fixture --fixture-response "Behavior contract. Scope, interaction state, validation error, and verification plan. Baseline evidence and hypothesis experiment. Finding and verification gap. Trust boundary and abuse path threat. Observed revision in the canonical record and next safe action. Repository identity, structure and boundaries, discovered command, and verification model. Knowledge candidate and placement decision."
-python scripts/check_distribution.py
-```
-
-These commands validate skill metadata and layout, local Markdown links, installer and packaging behavior, static eval-manifest and runtime-contract declarations, deterministic contract execution, and distributed wheel contents.
-
-> [!NOTE]
-> The `fixture` client tests the runtime-eval mechanism without executing an agent. Authenticated Codex model execution is an explicit release check, not a pull-request gate. Its invocation, output artifact, client/model version, privacy implications, and limits are documented in the [compatibility policy](docs/compatibility.md). Check external HTTP links explicitly with `python scripts/check_links.py --external`.
-
-<details>
-<summary>Project structure</summary>
+Jeder Skill liegt im Zed-kompatiblen Format vor:
 
 ```text
-.
-├── skills/                     # Portable Agent Skills
-├── evals/                      # Static cases, runtime contracts, client matrix, and tests
-├── scripts/                    # Validation, runtime eval, packaging, and installer tools
-├── docs/                       # Client guides and compatibility policy
-├── templates/                  # Optional repository instruction templates
-│   ├── AGENTS.md               # German skill routing and verification
-│   └── AGENTS-AIO.md           # General all-in-one quality guidance
-├── .github/workflows/          # Automation workflows
-├── CONTRIBUTING.md             # Contribution and clean-room rules
-├── pyproject.toml              # Python tooling and package metadata
-├── README.md                   # English documentation
-├── README.de.md                # German documentation
-└── LICENSE                     # Apache License 2.0
+skills/<skill-name>/SKILL.md
 ```
 
-The Python wheel is a data distribution, not an application or importable SDK. It places the README, Agent Skills, references, client guides, and installers below `share/agent-skill-forge/`.
+## Installation in Zed
 
-</details>
+Kopiere die gewünschten vollständigen Skill-Verzeichnisse an einen von Zed erkannten Ort:
 
-## Contributing
+- global: `~/.agents/skills/<skill-name>/SKILL.md`
+- projektbezogen: `<projekt>/.agents/skills/<skill-name>/SKILL.md`
 
-Contributions are welcome. Read [CONTRIBUTING.md](CONTRIBUTING.md) before opening a pull request. New or changed skill behavior must preserve portable metadata and valid local references, follow the clean-room process, and update the relevant evals and output-contract checks.
+Beispiel für eine globale Installation:
 
-## Security and support
+```sh
+cp -R skills/system-design ~/.agents/skills/system-design
+cp -R skills/qa-agent ~/.agents/skills/qa-agent
+```
 
-Treat third-party skills as untrusted instructions. Inspect their content, provenance, links, and dependencies before installation. Do not grant tools, credentials, or filesystem access solely because a skill document requests them.
+Vorhandene Zielverzeichnisse nicht ungeprüft überschreiben. Starte anschließend eine neue Zed-Konversation und kontrolliere, ob die installierten Skills im Skill-Katalog erscheinen.
 
-Report potential security vulnerabilities through GitHub’s private vulnerability reporting. Do not publish sensitive details in a public issue. Use [GitHub Issues](https://github.com/RobinGru/AgentSkillForge/issues) for public bug reports and questions.
+`deploy-feature` hat `disable-model-invocation: true` und wird aus Sicherheitsgründen nur manuell aktiviert.
 
-## License and notices
+Die ebenfalls deutschsprachige [`AGENTS.md`](AGENTS.md) enthält die übergeordneten Arbeits-, Kommunikations- und Verifikationsregeln dieses Repositorys. Sie verlangt deutsche Antworten und legt derzeit Englisch für Code, Kommentare und andere Repository-Artefakte fest. Zielprojekte können durch eigene, enger geltende Anweisungen abweichende Artefaktsprachen definieren.
 
-AgentSkillForge is distributed under the [Apache License 2.0](LICENSE). Review [NOTICE](NOTICE) and [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) before redistribution.
+## Feature-Artefakte
+
+Die Skills arbeiten mit folgenden Projektartefakten:
+
+```text
+features/
+├── index.md
+└── <FEATURE_ID>/
+    ├── SPEC.md
+    ├── decisions/
+    │   └── <decision-id>.md
+    ├── investigations/
+    │   └── <investigation-id>.md
+    ├── SYSTEM_DESIGN.md
+    ├── TASKS.md
+    ├── CODE_REVIEW.md
+    └── QA_REPORT.md
+```
+
+`features/index.md` ist die kanonische Zustandsübersicht und enthält Statusdefinitionen sowie die erlaubte Übergangstabelle. Der Hauptpfad ist:
+
+```text
+ROADMAP → SPECIFIED → ARCHITECTED → TASKED
+        → IN_BUILD → IN_REVIEW → APPROVED → DEPLOYED
+```
+
+`DEPLOYED` bezeichnet eine autorisiert bereitgestellte und durch eine Kurzprüfung bestätigte Revision und ist terminal. Rücksprünge sind nur über die in `features/index.md` dokumentierten Übergänge zulässig, etwa `IN_REVIEW` → `IN_BUILD` nach fehlgeschlagener QA oder `APPROVED` → `IN_BUILD`, sobald freigegebener Code verändert wurde.
+
+Ein Statuswechsel muss Ausgangsstatus, Zielstatus, verantwortlichen Skill, Grund und Nachweis dokumentieren. Fehlt ein erlaubter Übergang, bleibt der Status unverändert. Phasen dürfen nicht übersprungen werden.
+
+## Typischer Ablauf
+
+1. `init-project` erstellt Produkt- und Projektgrundlagen.
+2. `write-spec` definiert das beobachtbare Verhalten eines Features.
+3. `solution-framing` klärt bei Bedarf jeweils eine folgenreiche technische Entscheidung und verlangt eine ausdrückliche menschliche Auswahl.
+4. `system-design` entwirft die technische Umsetzung im erkannten Technologie-Stack und bindet genehmigte Entscheidungen ein.
+5. `task-planner` erstellt die ausführbaren Aufgaben.
+6. `build-feature` implementiert und verifiziert die Aufgaben; das Feature bleibt zunächst `IN_BUILD`.
+7. `fact-based-code-review` prüft die konkrete Änderung. Nur `READY FOR QA` für den unveränderten Stand erlaubt `build-feature`, `IN_BUILD` → `IN_REVIEW` zu setzen.
+8. `qa-agent` prüft Akzeptanzkriterien, Security und Revision. Bei einem Fehler mit unbekannter Ursache übergibt es zunächst an `failure-investigation`.
+9. `failure-investigation` reproduziert und reduziert den Fehler, ohne Code oder Feature-Status zu verändern; nur `SUPPORTED CAUSE` geht als begrenzter Fix zurück an `build-feature`.
+10. Nach der Korrektur und einer erneuten Codeprüfung prüft `qa-agent` die neue Revision erneut.
+11. `deploy-feature` plant zunächst einen Probelauf (`DRY RUN`) und führt nur ausdrücklich autorisierte Schritte aus.
+
+Die Skills sind bewusst getrennt. Eine spätere Phase darf fehlende Freigaben oder Nachweise einer früheren Phase nicht selbst erfinden. Der reguläre Prüfpfad lautet:
+
+```text
+build-feature → fact-based-code-review → qa-agent
+```
+
+`fact-based-code-review` verändert keinen Feature-Status und vergibt keine Feature-Freigabe. Der Übergang `IN_REVIEW` → `APPROVED` gehört ausschließlich `qa-agent`.
+
+Die Fehlerkorrekturschleife lautet bei unbekannter Ursache:
+
+```text
+qa-agent → failure-investigation → build-feature → qa-agent
+```
+
+`failure-investigation` verändert dabei keinen Feature-Status.
+
+
+## Validierung
+
+Dieses Repository enthält derzeit keinen eigenen Installer und keine eigene automatisierte Eval-Suite. Vor Änderungen sollten mindestens geprüft werden:
+
+- jedes Skill-Verzeichnis enthält genau eine `SKILL.md`;
+- YAML-Frontmatter enthält einen zum Verzeichnis passenden `name` und eine konkrete `description`;
+- lokale Markdown-Links zeigen auf vorhandene Dateien;
+- die Skills werden nach der Installation in einer neuen Zed-Konversation erkannt;
+- sicherheitskritische Skills werden mit kontrollierten Probeläufen evaluiert.
+
+## Lizenz
+
+Für dieses Repository und die eigenen Skills ist derzeit noch keine Projektlizenz festgelegt.

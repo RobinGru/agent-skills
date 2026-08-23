@@ -22,6 +22,36 @@ Die Skills sind technologieneutral: Sie untersuchen zuerst Repository-Anweisunge
 
 Die Beschreibungen, Überschriften und Anweisungstexte aller eigenen Skills sind deutsch. Skill-Namen, Dateipfade und fest definierte Statuswerte bleiben als stabile technische Identifikatoren unverändert.
 
+## Reihenfolge der Skills
+
+Der normale Ablauf für ein Feature ist:
+
+```text
+init-project
+  → write-spec
+  → system-design
+  → task-planner
+  → build-feature
+  → fact-based-code-review
+  → qa-agent
+  → deploy-feature
+```
+
+Drei Skills werden nur bei Bedarf eingeschoben:
+
+- `solution-framing`: vor oder während `system-design`, wenn eine wichtige technische Entscheidung menschlich freigegeben werden muss;
+- `product-interface-engineering`: während `build-feature` für eine klar begrenzte sichtbare UI-Aufgabe;
+- `failure-investigation`: nach einem fehlgeschlagenen Test, wenn die Ursache noch nicht sicher bekannt ist.
+
+Die typische Korrekturschleife lautet:
+
+```text
+qa-agent → failure-investigation → build-feature
+         → fact-based-code-review → qa-agent
+```
+
+`init-project` wird nur für neue Projekte benötigt. Bei einem bestehenden Projekt beginnt der Ablauf normalerweise mit `write-spec`.
+
 Jeder Skill liegt im Zed-kompatiblen Format vor:
 
 ```text
